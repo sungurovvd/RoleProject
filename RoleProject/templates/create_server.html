@@ -1,0 +1,17 @@
+{% extends 'default.html' %}
+
+{% block title %}
+Create Server
+{% endblock title %}
+
+{% block content %}
+
+<form action="" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+    <input type="hidden" name="user" value="{{request.user.username}}">
+    <p><label>Server Name: </label>
+      <input type="text" name="header" placeholder="server name"></p>
+
+  <p> <input type="submit" value="Submit" /></p>
+</form>
+{% endblock content %}

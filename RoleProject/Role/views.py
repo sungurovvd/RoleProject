@@ -4,6 +4,7 @@ from .forms import CustomUserCreationForm
 from .models import *
 from django.views.generic import View,CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
 
@@ -12,6 +13,12 @@ class UserList(LoginRequiredMixin, ListView):
     context_object_name = 'users'
     paginate_by = 10
     template_name = 'all_users.html'
+
+class ServerList(LoginRequiredMixin,ListView):
+    model = Server
+    context_object_name = 'servers'
+    paginate_by = 10
+    template_name = 'all_servers.html'
 
 
 class RoleList(LoginRequiredMixin, ListView):
@@ -204,8 +211,45 @@ class AddRoleToUser(LoginRequiredMixin, View):
 
         return redirect('user')
 
-class CreateRole(LoginRequiredMixin, View):
-    def post(self):
-        
+@login_required
+def create_user(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('user')  # Перенаправьте пользователя на страницу успешного создания
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'create_user.html', {'form': form})
 
+
+class CreateServer(LoginRequiredMixin,View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'create_server.html')
+
+    def post(self, request, *args, **kwargs):
+        servername = request.POST['header']
+
+        new_server = Server(
+            server_name=servername
+        )
+        new_server.save()
+        return redirect('all_servers')
+
+class RolesOnServer(LoginRequiredMixin,View):
+    def get(self, request, *args, **kwargs):
+        id = 0
+        for pk, number in kwargs.items():
+            id = int(number)
+        server = Server.objects.get(id=id)
+        roles_on_server_by_id = ServersForRole.objects.filter(server_id = server)
+        roles_on_server = []
+        for role in roles_on_server_by_id:
+            roles_on_server.append(role.role_id)
+        all_roles = Role.objects.all()
+        to_html = {'all_roles': all_roles,
+                   'server': server,
+                   'roles_on_server': roles_on_server
+                   }
+        return render(request, 'roles_on_server.html', context=to_html)
 

@@ -10,6 +10,10 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.login_user, name='login'),
     path('logout/', views.logout_user, name='logout'),
-    path('create_role/', CreateRole.as_view(), name = 'create_role'),
+    path('role/create', CreateRole.as_view(), name = 'create_role'),
+    path('user/create', views.create_user, name='create_user'),
+    path('server/', ServerList.as_view(), name='all_servers'),
+    path('server/create/', CreateServer.as_view(), name='create_server'),
+    path('server/<int:pk>', RolesOnServer.as_view(), name='roles_on_server')
 
 ]

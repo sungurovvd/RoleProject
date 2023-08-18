@@ -1,0 +1,26 @@
+{% extends 'default.html' %}
+
+{% block title %}
+Roles on server
+{% endblock title %}
+
+{% block content %}
+
+<form action="" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+    <input type="hidden" name="user" value="{{request.user.username}}">
+    <p><label>Server Name: {{server.server_name}}</label>
+    <p><label>Roles on this server</label>
+    {% for role in all_roles %}
+      {% if role in roles_on_server%}
+        <input type="checkbox" name="role" value={{role.id}} checked> {{role.name}}<br />
+      {% else %}
+        <input type="checkbox" name="role" value={{role.id}}> {{role.name}}<br />
+      {% endif %}
+    {% endfor %}
+
+
+
+  <p> <input type="submit" value="Submit" /></p>
+</form>
+{% endblock content %}
