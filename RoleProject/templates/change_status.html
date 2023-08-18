@@ -1,0 +1,62 @@
+{% extends 'default.html' %}
+{% block title %}
+Rolestatus
+{% endblock title %}
+
+{% block style %}
+    .vertical-container {
+      display: flex;
+      height: 400px; /* Высота контейнера, можно задать другое значение */
+    }
+
+    .section1 {
+      flex: 1;
+      background-color: #f1f1f1;
+      padding: 20px;
+    }
+
+    .section2 {
+      flex: 1;
+      background-color: #e1e1e1;
+      padding: 20px;
+    }
+
+    .section3 {
+      flex: 1;
+      background-color: #d1d1d1;
+      padding: 20px;
+    }
+{% endblock style %}
+
+{% block content %}
+  <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p> Role name: {{role_name}}</p>
+      <div class="vertical-container">
+        <div class="section1">
+          <p> Servers:</p>
+          {% for s in allowed_servers %}
+             {{s.server_id.server_name}}
+          {% endfor %}
+        </div>
+        <div class="section2">
+          <table>
+            <p> Rights:</p>
+            {% for r in rights %}
+             <tr>
+               <td>{{r.name}}</td>
+             </tr>
+             {% endfor %}
+           </table>
+        </div>
+      </div>
+    <label>Select status:</label>
+    <select name="status_list">
+      {% for s in status %}
+        <option value="{{s.id}}"> {{s.status}}</option>
+      {% endfor %}
+    </select>
+    <p> При удалении роли, роль удалится у всех пользователей</p>
+    <p> <input type="submit" value="Save" /></p>
+  </form>
+{% endblock content %}

@@ -1,0 +1,76 @@
+{% extends 'default.html' %}
+{% block title %}
+Rolestatus
+{% endblock title %}
+
+{% block style %}
+    .vertical-container {
+      display: flex;
+    }
+
+    .section1 {
+      flex: 1;
+      background-color: #f1f1f1;
+      padding: 20px;
+    }
+
+    .section2 {
+      flex: 1;
+      background-color: #e1e1e1;
+      padding: 20px;
+    }
+
+    .section3 {
+      flex: 1;
+      background-color: #d1d1d1;
+      padding: 20px;
+    }
+{% endblock style %}
+
+{% block content %}
+  <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p> Username: {{usr.username}}</p>
+    <label>roles of this user:</label>
+
+    {% for key, value in dict.items %}
+      <div class="vertical-container">
+        {% if value %}
+          <div class="section1">{{key}}</div>
+          <div class="section2">
+            {% for role in value %}
+              {{role}}</br>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <p> Choose roles on servers</p>
+    {% for server in servers %}
+      <div class="vertical-container">
+        <div class="section1">{{server.server_name}}</div>
+        <div class="section2">
+        {% for role in server_role %}
+          {% if role.server_id.id == server.id %}
+            {% for key, value in dict.items %}
+              {% if key == server.server_name %}
+                {% if role.role_id.name in value %}
+                  <input type="checkbox" name="{{server.id}}" value={{role.role_id.id}} checked> {{role.role_id.name}}<br />
+                {% else %}
+                  <input type="checkbox" name="{{server.id}}" value={{role.role_id.id}} > {{role.role_id.name}}<br />
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+        </div>
+      </div>
+      <hr>
+    {% endfor %}
+    <p> <input type="submit" value="Submit" /></p>
+
+  </form>
+
+
+
+{% endblock content %}

@@ -1,0 +1,14 @@
+{% extends 'default.html' %}
+{% block title %}
+Register
+{% endblock title %}
+
+{% block content %}
+    <h2>Sorry</h2>
+    <form method="post">
+        {% csrf_token %}
+        <p>Sorry, you havnt rights to do this. You can request them here.</p>
+    </form>
+
+
+{% endblock content %}

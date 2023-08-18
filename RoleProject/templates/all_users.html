@@ -1,0 +1,47 @@
+{% extends 'default.html' %}
+{% block title %}
+USers
+{% endblock title %}
+
+{% block content %}
+    {% if users %}
+       {% csrf_token %}
+       <h1>All Users</h1>
+       <table>
+           <tr>
+               <td>user id</td>
+               <td>username</td>
+               <td>mail</td>
+           </tr>
+           {% for user in users %}
+           <tr>
+               <td><a href = "{{user.id }}">{{ user.id  }}</a></td>
+               <td>{{ user.username  }}</td>
+               <td> {{user.email}} </td>
+
+
+           </tr>
+           {% endfor %}
+       </table>
+    {% else %}
+       <h2>We havnt any available users</h2>
+    {% endif %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock content %}
